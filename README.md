@@ -1,5 +1,3 @@
-#### docker run --name pgvector-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=secret -p 5432:5432 ankane/pgvector
----- 
 # RAG System for Dynatrace Logs Using Spring AI
 
 This project implements a **Retrieval-Augmented Generation (RAG) system** using **Spring AI, pgvector, and a locally deployed AI model**. It enables users to **query Dynatrace logs using natural language**, and the system generates **Dynatrace Query Language (DQL) queries**.
