@@ -15,18 +15,11 @@ This project implements a **Retrieval-Augmented Generation (RAG) system** using 
 
 ### **1️⃣ Install and Run PostgreSQL with pgvector**
 
-#### **Option 1: Run pgvector with Docker**
+#### **Run pgvector with Docker**
 
 ```sh
 docker run --name pgvector-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=secret -p 5432:5432 ankane/pgvector
 ```
-
-#### **Option 2: Install pgvector on an Existing PostgreSQL**
-
-```sql
-CREATE EXTENSION IF NOT EXISTS vector;
-```
-
 ---
 
 ### **2️⃣ Configure Spring Boot for PostgreSQL & pgvector**
@@ -40,9 +33,8 @@ CREATE EXTENSION IF NOT EXISTS vector;
     <version>42.5.1</version>
 </dependency>
 <dependency>
-    <groupId>io.github.pgvector</groupId>
-    <artifactId>pgvector</artifactId>
-    <version>0.2.4</version>
+    <groupId>org.springframework.ai</groupId>
+    <artifactId>spring-ai-pgvector-store-spring-boot-starter</artifactId>
 </dependency>
 <dependency>
     <groupId>org.springframework.ai</groupId>
@@ -54,22 +46,32 @@ CREATE EXTENSION IF NOT EXISTS vector;
 #### **Configure **``
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+# Database Configuration
+spring.datasource.url=jdbc:postgresql://localhost:5432/your_db
 spring.datasource.username=postgres
-spring.datasource.password=secret
-spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
+
+# Ollama Configuration for MXBai Embed Large
+spring.ai.ollama.base-url=http://localhost:11434
+spring.ai.ollama.embedding.options.model=mxbai-embed-large
 ```
 
 ---
 
-### **3️⃣ Create a Table for Storing Embedded Documentation**
+### **3️⃣ Set up PostgreSQL with pgvector**
 
+Adjust the vector dimension to 1024 for MXBai Embed Large:
 ```sql
+CREATE EXTENSION IF NOT EXISTS vector;
+
 CREATE TABLE document_embeddings (
-    id SERIAL PRIMARY KEY,
-    content TEXT,
-    embedding vector(1536) -- Adjust size based on model
+                                     id SERIAL PRIMARY KEY,
+                                     content TEXT NOT NULL,
+                                     embedding vector(1024) NOT NULL  -- MXBai Embed Large uses 1024 dimensions
 );
+
+CREATE INDEX ON document_embeddings USING hnsw (embedding vector_cosine_ops);
 ```
 
 ---
@@ -95,26 +97,7 @@ public class DocumentationFetcherService {
         }
     }
 }
-```
 
-#### **Embed Documentation into pgvector**
-
-```java
-import org.springframework.ai.embedding.EmbeddingClient;
-import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.stereotype.Service;
-
-@Service
-public class DocumentationEmbeddingService {
-    private final EmbeddingClient embeddingClient;
-    private final VectorStore vectorStore;
-    private final DocumentationFetcherService fetcherService;
-
-    public void embedDocumentation(String url) {
-        String content = fetcherService.fetchDocumentation(url);
-        vectorStore.add(content, embeddingClient.embed(content));
-    }
-}
 ```
 
 ---
