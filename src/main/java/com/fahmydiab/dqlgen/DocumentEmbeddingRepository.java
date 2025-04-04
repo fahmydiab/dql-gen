@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface DocumentEmbeddingRepository extends JpaRepository<DocumentEmbedding, Long> {
-    @Query(value = "SELECT * FROM document_embeddings ORDER BY embedding <=> CAST(:embedding AS vector) LIMIT :limit", nativeQuery = true)
+    @Query(value = "SELECT * FROM document_embeddings_v2 ORDER BY embedding <=> CAST(:embedding AS vector) LIMIT :limit", nativeQuery = true)
     List<DocumentEmbedding> findSimilarDocuments(@Param("embedding") float[] embedding, @Param("limit") int limit);
 }
