@@ -34,11 +34,11 @@ public class DocumentationFetcherService {
     public List<String> fetchDocumentation(String startUrl) {
         try {
             URI uri = new URI(startUrl);
-            this.allowedDomain = uri.getHost();
-            queue.offer(startUrl);
-            visitedUrls.add(startUrl);
-            crawl();
-            writeToJson("output.json");
+//            this.allowedDomain = uri.getHost();
+//            queue.offer(startUrl);
+//            visitedUrls.add(startUrl);
+//            crawl();
+//            writeToJson("output_v2.json");
             List<String> documents = loadDocuments();
             return splitDocuments(documents);
         } catch (URISyntaxException e) {
@@ -121,8 +121,8 @@ public class DocumentationFetcherService {
     private List<String> splitDocuments(List<String> documents) {
         List<String> splits = new ArrayList<>();
         for (String doc : documents) {
-            int chunkSize = 1000;
-            int chunkOverlap = 200;
+            int chunkSize = 400;
+            int chunkOverlap = 100;
             if (doc.length() <= chunkSize) {
                 splits.add(doc);
             } else {
@@ -137,7 +137,7 @@ public class DocumentationFetcherService {
 
     private List<String> loadDocuments() {
         List<String> contents = new ArrayList<>();
-        try (FileReader reader = new FileReader("output.json")) {
+        try (FileReader reader = new FileReader("output_v2.json")) {
             StringBuilder sb = new StringBuilder();
             int i;
             while ((i = reader.read()) != -1) {

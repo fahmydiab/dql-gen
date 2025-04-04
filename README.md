@@ -174,6 +174,18 @@ fetch logs
 | timeframe between now() - 1d and now()
 ```
 
+### **Delete duplicates**
+```sql
+DELETE
+FROM document_embeddings_v2
+where ctid in (select ctid
+               from (select ctid,
+                            ROW_NUMBER() over
+                                (PARTITION BY document_embeddings_v2.content ORDER BY id) AS row_num
+                     FROM document_embeddings_v2) t
+               where row_num > 1);
+```
+
 ---
 
 ## **Next Steps**

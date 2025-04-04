@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "document_embeddings")
+@Table(name = "document_embeddings_v2")
 public class DocumentEmbedding {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,7 +14,7 @@ public class DocumentEmbedding {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Column(columnDefinition = "vector(1024)")
+    @Column(columnDefinition = "vector(768)")
     @Type(PGvectorType.class)
     private PGvector embedding;
 
