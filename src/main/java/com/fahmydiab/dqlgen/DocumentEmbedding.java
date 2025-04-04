@@ -1,7 +1,8 @@
 package com.fahmydiab.dqlgen;
 
+import com.pgvector.PGvector;
 import jakarta.persistence.*;
-import java.util.List;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "document_embeddings")
@@ -14,8 +15,8 @@ public class DocumentEmbedding {
     private String content;
 
     @Column(columnDefinition = "vector(1024)")
-    @Convert(converter = EmbeddingVectorConverter.class)
-    private List<Float> embedding;
+    @Type(PGvectorType.class)
+    private PGvector embedding;
 
     // Getters and setters
     public Long getId() {
@@ -34,11 +35,11 @@ public class DocumentEmbedding {
         this.content = content;
     }
 
-    public List<Float> getEmbedding() {
+    public PGvector getEmbedding() {
         return embedding;
     }
 
-    public void setEmbedding(List<Float> embedding) {
+    public void setEmbedding(PGvector embedding) {
         this.embedding = embedding;
     }
 }

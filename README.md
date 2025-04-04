@@ -159,7 +159,11 @@ curl "http://localhost:8080/dynatrace/embed?url=https://docs.dynatrace.com/data-
 ### **Step 2: Generate a DQL Query**
 
 ```sh
-curl "http://localhost:8080/dynatrace/generate-query?query=Show error logs from last 24 hours"
+curl "http://localhost:8080/dynatrace/generate-query" --data-urlencode "query=Show error logs from last 24 hours"
+```
+or
+```sh
+curl "http://localhost:8080/dynatrace/generate-query?query=Show%20error%20logs%20from%20last%2024%20hours"
 ```
 
 ### **Example Output:**
