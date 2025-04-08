@@ -165,6 +165,10 @@ or
 ```sh
 curl "http://localhost:8080/dynatrace/generate-query?query=Show%20error%20logs%20from%20last%2024%20hours"
 ```
+or
+```sh
+curl -X POST http://localhost:8080/dynatrace/generate-query -H 'Content-Type: application/json' -d '{"question": "Show me logs that its content has PRE environment and contains region"}'
+```
 
 ### **Example Output:**
 

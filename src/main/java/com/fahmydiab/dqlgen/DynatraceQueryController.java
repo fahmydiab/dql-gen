@@ -22,4 +22,9 @@ public class DynatraceQueryController {
     public void embedQuery(@RequestParam String url) {
         embeddingService.embedDocumentation(url);
     }
+
+    @PostMapping("/generate-query")
+    public String generateQuery(@RequestBody GenerateQueryRequest request) {
+        return queryService.generateDqlQuery(request.getQuestion());
+    }
 }
